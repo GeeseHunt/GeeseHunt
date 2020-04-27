@@ -9,8 +9,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import StyleContext from 'isomorphic-style-loader/StyleContext';
+import { Provider as ReduxProvider } from 'react-redux';
 import ApplicationContext from './ApplicationContext';
 
 /**
@@ -57,6 +57,9 @@ App.propTypes = {
     fetch: PropTypes.func.isRequired,
     pathname: PropTypes.string.isRequired,
     query: PropTypes.object,
+    // Integrate Redux
+    // http://redux.js.org/docs/basics/UsageWithReact.html
+    ...ReduxProvider.childContextTypes,
   }).isRequired,
   children: PropTypes.element.isRequired,
 };
