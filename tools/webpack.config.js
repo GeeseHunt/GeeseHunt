@@ -122,12 +122,6 @@ const config = {
       {
         test: reStyle,
         rules: [
-          // Convert CSS into JS module
-          {
-            issuer: { not: [reStyle] },
-            use: 'isomorphic-style-loader',
-          },
-
           // Process external/third-party styles
           {
             exclude: SRC_DIR,
@@ -150,16 +144,6 @@ const config = {
                 localIdentName: isDebug
                   ? '[name]-[local]-[hash:base64:5]'
                   : '[hash:base64:5]',
-              },
-            },
-          },
-
-          // Apply PostCSS plugins including autoprefixer
-          {
-            loader: 'postcss-loader',
-            options: {
-              config: {
-                path: './tools/postcss.config.js',
               },
             },
           },

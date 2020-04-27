@@ -10,6 +10,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider as ReduxProvider } from 'react-redux';
+import { createGenerateClassName, StylesProvider } from '@material-ui/core';
 import ApplicationContext from './ApplicationContext';
 
 /**
@@ -36,11 +37,15 @@ import ApplicationContext from './ApplicationContext';
  */
 
 export default function App({ context, children }) {
+  const generateClassName = createGenerateClassName();
+
   // NOTE: If you need to add or modify header, footer etc. of the app,
   // please do that inside the Layout component.
   return (
     <ApplicationContext.Provider value={{ context }}>
-      {React.Children.only(children)}
+      <StylesProvider generateClassName={generateClassName}>
+        {React.Children.only(children)}
+      </StylesProvider>
     </ApplicationContext.Provider>
   );
 }

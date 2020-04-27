@@ -25,6 +25,25 @@ module.exports = {
   plugins: [
     '@babel/plugin-proposal-class-properties',
     '@babel/plugin-syntax-dynamic-import',
+    'babel-plugin-styled-components',
+    [
+      'babel-plugin-import',
+      {
+        libraryName: '@material-ui/core',
+        libraryDirectory: 'esm',
+        camel2DashComponentName: false,
+      },
+      'core',
+    ],
+    [
+      'babel-plugin-import',
+      {
+        libraryName: '@material-ui/icons',
+        libraryDirectory: 'esm',
+        camel2DashComponentName: false,
+      },
+      'icons',
+    ],
   ],
   ignore: ['node_modules', 'build'],
 };
