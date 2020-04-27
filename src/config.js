@@ -9,6 +9,10 @@
 
 /* eslint-disable max-len */
 
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 if (process.env.BROWSER) {
   throw new Error(
     'Do not import `config.js` from inside the client-side code.',
@@ -30,7 +34,11 @@ module.exports = {
     serverUrl:
       process.env.API_SERVER_URL ||
       `http://localhost:${process.env.PORT || 3000}`,
+
+    uwAPIUrl: process.env.UW_API_URL || 'https://api.uwaterloo.ca/v2',
   },
+
+  uwAPIKey: process.env.UW_API_KEY,
 
   // Database
   databaseUrl: process.env.DATABASE_URL || 'sqlite:database.sqlite',
