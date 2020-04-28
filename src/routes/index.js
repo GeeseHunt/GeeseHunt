@@ -16,8 +16,12 @@ const routes = {
   // Keep in mind, routes are evaluated in order
   children: [
     {
-      path: '',
-      load: () => import(/* webpackChunkName: 'home' */ './home'),
+      path: '/',
+      load: () => import(/* webpackChunkName: 'root' */ './root'),
+    },
+    {
+      path: '/courses',
+      load: () => import(/* webpackChunkName: 'courses' */ './courses'),
     },
     // Wildcard routes, e.g. { path: '(.*)', ... } (must go last)
     {

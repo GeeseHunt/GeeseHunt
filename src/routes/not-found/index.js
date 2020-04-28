@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import Layout from '../../components/Layout';
+import AppLayout from '../../components/AppLayout/AppLayout';
 import NotFound from './NotFound';
 
 const title = 'Page Not Found';
@@ -18,9 +18,9 @@ function action() {
     chunks: ['not-found'],
     title,
     component: (
-      <Layout>
+      <AppLayout>
         <NotFound title={title} />
-      </Layout>
+      </AppLayout>
     ),
     status: 404,
   };
