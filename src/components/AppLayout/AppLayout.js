@@ -31,14 +31,14 @@ import { selectUser } from '../../selectors/user';
 function AppLayout({ children, user }) {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [showLogin, setShowLogin] = React.useState(false);
   const handleDrawerOpen = () => {
-    setOpen(true);
+    setDrawerOpen(true);
   };
 
   const handleDrawerClose = () => {
-    setOpen(false);
+    setDrawerOpen(false);
   };
 
   const isLoggedIn = Boolean(user.id);
@@ -52,7 +52,7 @@ function AppLayout({ children, user }) {
     <AppBar
       position="fixed"
       className={clsx(classes.appBar, {
-        [classes.appBarShift]: open,
+        [classes.appBarShift]: drawerOpen,
       })}
     >
       <Toolbar>
@@ -62,7 +62,7 @@ function AppLayout({ children, user }) {
           onClick={handleDrawerOpen}
           edge="start"
           className={clsx(classes.menuButton, {
-            [classes.hide]: open,
+            [classes.hide]: drawerOpen,
           })}
         >
           <MenuIcon />
@@ -92,13 +92,13 @@ function AppLayout({ children, user }) {
     <Drawer
       variant="permanent"
       className={clsx(classes.drawer, {
-        [classes.drawerOpen]: open,
-        [classes.drawerClose]: !open,
+        [classes.drawerOpen]: drawerOpen,
+        [classes.drawerClose]: !drawerOpen,
       })}
       classes={{
         paper: clsx({
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
+          [classes.drawerOpen]: drawerOpen,
+          [classes.drawerClose]: !drawerOpen,
         }),
       }}
     >
