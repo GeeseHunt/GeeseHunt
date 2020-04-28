@@ -199,7 +199,7 @@ app.get('*', async (req, res, next) => {
       apiUrl: config.api.clientUrl,
       state: context.store.getState(),
     };
-    data.styles = [{ id: 'css', cssText: sheets.toString() }];
+    data.styles = [{ id: 'jss-server-side', cssText: sheets.toString() }];
 
     const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
 
