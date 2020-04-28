@@ -14,19 +14,25 @@ import {
   ListItemIcon,
   ListItemText,
   CssBaseline,
+  Button,
+  Avatar,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SpellcheckIcon from '@material-ui/icons/Spellcheck';
 import ExploreIcon from '@material-ui/icons/Explore';
+import { connect } from 'react-redux';
 import Link from '../Link/Link';
 import useStyles from './styles/AppLayoutStyles';
+import LoginDialog from '../LoginDialog';
+import { selectUser } from '../../selectors/user';
 
-export default function AppLayout({ children }) {
+function AppLayout({ children, user }) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [showLogin, setShowLogin] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -34,6 +40,8 @@ export default function AppLayout({ children }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const isLoggedIn = Boolean(user.id);
 
   const sideBarMenuItems = [
     { text: 'Explorer Course', icon: <ExploreIcon />, link: '/courses' },
@@ -59,9 +67,23 @@ export default function AppLayout({ children }) {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap>
+        <Typography variant="h6" noWrap className={classes.appTitle}>
           GeeseHunt
         </Typography>
+        {isLoggedIn ? (
+          <IconButton size="small">
+            <Avatar
+              alt={user.displayName}
+              src={user.avatarUrl}
+              className={classes.avatar}
+            />
+          </IconButton>
+        ) : (
+          <Button color="inherit" onClick={() => setShowLogin(true)}>
+            Login
+          </Button>
+        )}
+        <LoginDialog open={showLogin} onClose={() => setShowLogin(false)} />
       </Toolbar>
     </AppBar>
   );
@@ -118,4 +140,11 @@ export default function AppLayout({ children }) {
 
 AppLayout.propTypes = {
   children: PropTypes.node.isRequired,
+  user: PropTypes.object.isRequired,
 };
+
+const mapStateToProps = state => ({
+  user: selectUser(state),
+});
+
+export default connect(mapStateToProps)(AppLayout);

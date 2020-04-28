@@ -61,8 +61,15 @@ export default makeStyles(theme => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  appTitle: {
+    flexGrow: 1,
+  },
   listItemLink: {
     color: theme.palette.text.primary,
     textDecoration: 'none',
+  },
+  avatar: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
   },
 }));

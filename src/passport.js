@@ -1,21 +1,14 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
-/**
- * Passport.js reference implementation.
- * The database schema used in this sample is available at
- * https://github.com/membership/membership.db/tree/master/postgres
- */
-
 import passport from 'passport';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import config from './config';
+import User from './data/models/User';
+
+const toUserObject = user => ({
+  // eslint-disable-next-line no-underscore-dangle
+  id: user._id,
+  displayName: user.displayName,
+  avatarUrl: user.avatarUrl,
+});
 
 /**
  * Sign in with Facebook.
@@ -27,18 +20,39 @@ passport.use(
       clientSecret: config.auth.facebook.secret,
       callbackURL: '/login/facebook/return',
       profileFields: [
+        'id',
         'displayName',
-        'name',
-        'email',
+        'photos',
         'link',
         'locale',
         'timezone',
       ],
       passReqToCallback: true,
     },
-    /* eslint-disable no-unused-vars */
     (req, accessToken, refreshToken, profile, done) => {
-      throw new Error('Facebook OAuth not implemented!');
+      const { id, provider } = profile;
+
+      User.findOne({
+        oauth: {
+          $elemMatch: { id, provider },
+        },
+      }).then(foundUser => {
+        if (foundUser) {
+          done(null, toUserObject(foundUser));
+          return;
+        }
+
+        const { displayName, photos = [] } = profile;
+        const { value: avatarUrl } = photos[0] || { value: '' };
+
+        User.create(
+          { displayName, avatarUrl, oauth: [{ id, provider }] },
+          (err, newUser) => {
+            if (err) done(err);
+            else done(null, toUserObject(newUser));
+          },
+        );
+      });
     },
   ),
 );
