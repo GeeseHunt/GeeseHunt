@@ -105,6 +105,25 @@ const config = {
             // Experimental ECMAScript proposals
             '@babel/plugin-proposal-class-properties',
             '@babel/plugin-syntax-dynamic-import',
+            'babel-plugin-styled-components',
+            [
+              'babel-plugin-import',
+              {
+                libraryName: '@material-ui/core',
+                libraryDirectory: 'esm',
+                camel2DashComponentName: false,
+              },
+              'core',
+            ],
+            [
+              'babel-plugin-import',
+              {
+                libraryName: '@material-ui/icons',
+                libraryDirectory: 'esm',
+                camel2DashComponentName: false,
+              },
+              'icons',
+            ],
             // Treat React JSX elements as value types and hoist them to the highest scope
             // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
             ...(isDebug ? [] : ['@babel/transform-react-constant-elements']),
@@ -115,6 +134,7 @@ const config = {
             // https://github.com/oliviertassinari/babel-plugin-transform-react-remove-prop-types
             ...(isDebug ? [] : ['transform-react-remove-prop-types']),
           ],
+          ignore: ['node_modules', 'build'],
         },
       },
 

@@ -95,8 +95,11 @@ module.exports = {
       '<rootDir>/tools/lib/fileTransformer.js',
   },
 
-  // transformIgnorePatterns: // [array<string>]
+  // https://jestjs.io/docs/en/configuration#transformignorepatterns-arraystring
+  transformIgnorePatterns: ['node_modules/(?!(@material-ui)/)'],
   // unmockedModulePathPatterns: // [array<string>]
+
+  setupFilesAfterEnv: ['./tools/setupEnzyme.js'],
 
   verbose: true, // [boolean]
 };
