@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginDialog #render renders without errors 1`] = `
+<NoSsr>
+  <WithStyles(ForwardRef(Dialog))
+    aria-labelledby="login-dialog-title"
+    onClose={[Function]}
+    open={false}
+  >
+    <WithStyles(ForwardRef(DialogTitle))
+      id="login-dialog-title"
+    >
+      Login with our provider
+    </WithStyles(ForwardRef(DialogTitle))>
+    <WithStyles(ForwardRef(DialogContent))>
+      <a
+        href="/login/facebook"
+        onClick={[Function]}
+        style={
+          Object {
+            "textDecoration": "none",
+          }
+        }
+      >
+        <WithStyles(ForwardRef(Button))
+          color="primary"
+          size="large"
+          variant="contained"
+        >
+          <FacebookIcon
+            fontSize="large"
+          />
+            Continue with Facebook
+        </WithStyles(ForwardRef(Button))>
+      </a>
+    </WithStyles(ForwardRef(DialogContent))>
+    <WithStyles(ForwardRef(DialogActions)) />
+  </WithStyles(ForwardRef(Dialog))>
+</NoSsr>
+`;

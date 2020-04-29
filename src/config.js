@@ -41,7 +41,8 @@ module.exports = {
   uwAPIKey: process.env.UW_API_KEY,
 
   // Database
-  databaseUrl: process.env.DATABASE_URL || 'sqlite:database.sqlite',
+  databaseUrl:
+    process.env.DATABASE_URL || 'mongodb://localhost:27017/geesehunt',
 
   // Web analytics
   analytics: {

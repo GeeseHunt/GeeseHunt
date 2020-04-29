@@ -19,6 +19,7 @@ import nodeFetch from 'node-fetch';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import PrettyError from 'pretty-error';
+import { ServerStyleSheets } from '@material-ui/core';
 import App from './components/App';
 import Html from './components/Html';
 import { ErrorPageWithoutStyle } from './routes/error/ErrorPage';
@@ -31,6 +32,7 @@ import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unr
 import configureStore from './store/configureStore';
 import { setRuntimeVariable } from './actions/runtime';
 import config from './config';
+import configureDatabase from './data/configureDatabase';
 
 process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -44,6 +46,10 @@ process.on('unhandledRejection', (reason, p) => {
 // -----------------------------------------------------------------------------
 global.navigator = global.navigator || {};
 global.navigator.userAgent = global.navigator.userAgent || 'all';
+
+configureDatabase(config.databaseUrl, {
+  autoIndex: __DEV__,
+});
 
 const app = express();
 
@@ -87,7 +93,6 @@ app.use(passport.initialize());
 app.get(
   '/login/facebook',
   passport.authenticate('facebook', {
-    scope: ['email'],
     session: false,
   }),
 );
@@ -95,7 +100,7 @@ app.get(
 app.get(
   '/login/facebook/return',
   passport.authenticate('facebook', {
-    failureRedirect: '/login',
+    failureRedirect: '/',
     session: false,
   }),
   (req, res) => {
@@ -168,8 +173,13 @@ app.get('*', async (req, res, next) => {
     }
 
     const data = { ...route };
+
+    // Server side rendering support for mui.
+    // https://material-ui.com/guides/server-rendering/
+    const sheets = new ServerStyleSheets();
+
     data.children = ReactDOM.renderToString(
-      <App context={context}>{route.component}</App>,
+      sheets.collect(<App context={context}>{route.component}</App>),
     );
 
     const scripts = new Set();
@@ -189,8 +199,10 @@ app.get('*', async (req, res, next) => {
       apiUrl: config.api.clientUrl,
       state: context.store.getState(),
     };
+    data.styles = [{ id: 'jss-server-side', cssText: sheets.toString() }];
 
     const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
+
     res.status(route.status || 200);
     res.send(`<!doctype html>${html}`);
   } catch (err) {

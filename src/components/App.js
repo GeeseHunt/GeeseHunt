@@ -10,7 +10,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider as ReduxProvider } from 'react-redux';
-import { createGenerateClassName, StylesProvider } from '@material-ui/core';
 import ApplicationContext from './ApplicationContext';
 
 /**
@@ -37,16 +36,18 @@ import ApplicationContext from './ApplicationContext';
  */
 
 export default function App({ context, children }) {
-  const generateClassName = createGenerateClassName();
+  const { fetch, pathname, query, ...reduxContext } = context;
 
   // NOTE: If you need to add or modify header, footer etc. of the app,
   // please do that inside the Layout component.
   return (
-    <ApplicationContext.Provider value={{ context }}>
-      <StylesProvider generateClassName={generateClassName}>
+    <ReduxProvider {...reduxContext}>
+      <ApplicationContext.Provider
+        value={{ context: { fetch, pathname, query } }}
+      >
         {React.Children.only(children)}
-      </StylesProvider>
-    </ApplicationContext.Provider>
+      </ApplicationContext.Provider>
+    </ReduxProvider>
   );
 }
 
