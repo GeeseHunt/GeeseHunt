@@ -1,5 +1,5 @@
 import React from 'react';
-import AppLayout from '../../components/AppLayout/AppLayout';
+import AppLayout from '../../components/AppLayout';
 
 async function action() {
   return {

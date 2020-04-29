@@ -34,35 +34,41 @@ describe('yarn start', () => {
   });
 
   it('launches the App', async () => {
-    const expect = 'React.js News';
-    const actual = await page.$$eval('h1', es => es[1].textContent);
+    const expect = 'GeeseHunt';
+    const actual = await page.$$eval('h6', es => es[0].textContent);
     assert.deepStrictEqual(actual, expect);
   });
 
   it(
     'does Hot Module Reload',
     async () => {
-      const sourcePath = 'src/routes/home/Home.js';
+      const sourcePath = 'src/components/AppLayout/index.js';
       const sourceAbsPath = path.join(cwd, sourcePath);
       const expect = 'HMR!!!';
-      const defaultH1 = '<h1>React.js News</h1>';
-      const modifiedH1 = `<h1>${expect}</h1>`;
+      const defaultTitle = 'GeeseHunt';
+      const modifiedH1 = expect;
 
       const modifySource = async () => {
         const content = await readFile(sourceAbsPath);
-        if (!content.includes(defaultH1))
-          throw new Error('This test cannot run. Check "defaultH1".');
-        await writeFile(sourceAbsPath, content.replace(defaultH1, modifiedH1));
+        if (!content.includes(defaultTitle))
+          throw new Error('This test cannot run. Check "defaultTitle".');
+        await writeFile(
+          sourceAbsPath,
+          content.replace(defaultTitle, modifiedH1),
+        );
       };
 
       const resetSource = async () => {
         const content = await readFile(sourceAbsPath);
-        await writeFile(sourceAbsPath, content.replace(modifiedH1, defaultH1));
+        await writeFile(
+          sourceAbsPath,
+          content.replace(modifiedH1, defaultTitle),
+        );
       };
 
       await modifySource();
       await timeout(3 * 1000);
-      const actual = await page.$$eval('h1', es => es[1].textContent);
+      const actual = await page.$$eval('h6', es => es[0].textContent);
       assert.deepStrictEqual(actual, expect);
 
       await resetSource();

@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AppLayout #render renders without errors 1`] = `
+<div
+  className="makeStyles-root-1"
+>
+  <WithStyles(CssBaseline) />
+  <WithStyles(ForwardRef(AppBar))
+    className="makeStyles-appBar-2"
+    position="fixed"
+  >
+    <WithStyles(ForwardRef(Toolbar))>
+      <WithStyles(ForwardRef(IconButton))
+        aria-label="open drawer"
+        className="makeStyles-menuButton-4"
+        color="inherit"
+        edge="start"
+        onClick={[Function]}
+      >
+        <MenuIcon />
+      </WithStyles(ForwardRef(IconButton))>
+      <WithStyles(ForwardRef(Typography))
+        className="makeStyles-appTitle-11"
+        noWrap={true}
+        variant="h6"
+      >
+        GeeseHunt
+      </WithStyles(ForwardRef(Typography))>
+      <WithStyles(ForwardRef(IconButton))
+        size="small"
+      >
+        <WithStyles(ForwardRef(Avatar))
+          alt="name"
+          className="makeStyles-avatar-13"
+          src=""
+        />
+      </WithStyles(ForwardRef(IconButton))>
+      <LoginDialog
+        onClose={[Function]}
+        open={false}
+      />
+    </WithStyles(ForwardRef(Toolbar))>
+  </WithStyles(ForwardRef(AppBar))>
+  <WithStyles(ForwardRef(Drawer))
+    className="makeStyles-drawer-6 makeStyles-drawerClose-8"
+    classes={
+      Object {
+        "paper": "makeStyles-drawerClose-8",
+      }
+    }
+    variant="permanent"
+  >
+    <div
+      className="makeStyles-toolbar-9"
+    >
+      <WithStyles(ForwardRef(IconButton))
+        onClick={[Function]}
+      >
+        <ChevronLeftIcon />
+      </WithStyles(ForwardRef(IconButton))>
+    </div>
+    <WithStyles(ForwardRef(Divider)) />
+    <WithStyles(ForwardRef(List))>
+      <Link
+        className="makeStyles-listItemLink-12"
+        key="Explorer Course"
+        onClick={null}
+        to="/courses"
+      >
+        <WithStyles(ForwardRef(ListItem))
+          button={true}
+        >
+          <WithStyles(ForwardRef(ListItemIcon))>
+            <ExploreIcon />
+          </WithStyles(ForwardRef(ListItemIcon))>
+          <WithStyles(ForwardRef(ListItemText))
+            primary="Explorer Course"
+          />
+        </WithStyles(ForwardRef(ListItem))>
+      </Link>
+      <Link
+        className="makeStyles-listItemLink-12"
+        key="My GPA"
+        onClick={null}
+        to="/"
+      >
+        <WithStyles(ForwardRef(ListItem))
+          button={true}
+        >
+          <WithStyles(ForwardRef(ListItemIcon))>
+            <SpellcheckIcon />
+          </WithStyles(ForwardRef(ListItemIcon))>
+          <WithStyles(ForwardRef(ListItemText))
+            primary="My GPA"
+          />
+        </WithStyles(ForwardRef(ListItem))>
+      </Link>
+    </WithStyles(ForwardRef(List))>
+  </WithStyles(ForwardRef(Drawer))>
+  <main
+    className="makeStyles-content-10"
+  >
+    <div
+      className="makeStyles-toolbar-9"
+    />
+    <div>
+      Hello world!
+    </div>
+  </main>
+</div>
+`;

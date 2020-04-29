@@ -8,8 +8,8 @@
  */
 
 import React from 'react';
-import AppLayout from '../../components/AppLayout/AppLayout';
 import NotFound from './NotFound';
+import AppLayout from '../../components/AppLayout';
 
 const title = 'Page Not Found';
 

@@ -28,7 +28,7 @@ import useStyles from './styles/AppLayoutStyles';
 import LoginDialog from '../LoginDialog';
 import { selectUser } from '../../selectors/user';
 
-function AppLayout({ children, user }) {
+export function AppLayout({ children, user }) {
   const classes = useStyles();
   const theme = useTheme();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
