@@ -13,8 +13,9 @@ import {
   GraphQLUnionType as UnionType,
 } from 'graphql';
 import SubjectType from './types/SubjectType';
+import CourseType from './types/CourseType';
 
-const paginateTypes = [SubjectType];
+const paginateTypes = [SubjectType, CourseType];
 
 const PageEdgeNodeType = new UnionType({
   name: 'PageEdgeNode',

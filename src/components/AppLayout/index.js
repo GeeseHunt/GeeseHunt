@@ -44,7 +44,7 @@ export function AppLayout({ children, user }) {
   const isLoggedIn = Boolean(user.id);
 
   const sideBarMenuItems = [
-    { text: 'Explorer Course', icon: <ExploreIcon />, link: '/courses' },
+    { text: 'Explorer Course', icon: <ExploreIcon />, link: '/explore' },
     { text: 'My GPA', icon: <SpellcheckIcon />, link: '/' },
   ];
 

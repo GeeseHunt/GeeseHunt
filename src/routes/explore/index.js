@@ -4,8 +4,8 @@ import ExploreLayout from '../../components/ExploreLayout';
 
 async function action() {
   return {
-    title: 'GeeseHunt - Courses',
-    chunks: ['courses'],
+    title: 'GeeseHunt - Explore',
+    chunks: ['explore'],
     component: (
       <AppLayout>
         <ExploreLayout />
