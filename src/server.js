@@ -33,6 +33,7 @@ import configureStore from './store/configureStore';
 import { setRuntimeVariable } from './actions/runtime';
 import config from './config';
 import configureDatabase from './data/configureDatabase';
+import UWDataClient from './clients/uwDataClient';
 
 process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -50,6 +51,13 @@ global.navigator.userAgent = global.navigator.userAgent || 'all';
 configureDatabase(config.databaseUrl, {
   autoIndex: __DEV__,
 });
+
+const clients = {
+  uwDataClient: new UWDataClient({
+    baseUrl: config.api.uwApiUrl,
+    apiKey: config.apiKeys.uwApiKey,
+  }),
+};
 
 const app = express();
 
@@ -114,12 +122,15 @@ app.get(
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
+// Documentation of fields provided to the resolver:
+// https://graphql.org/learn/execution/#root-fields-resolvers
 app.use(
   '/graphql',
   expressGraphQL(req => ({
     schema,
     graphiql: __DEV__,
     rootValue: { request: req },
+    context: { clients },
     pretty: __DEV__,
   })),
 );

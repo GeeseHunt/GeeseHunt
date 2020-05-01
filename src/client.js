@@ -37,16 +37,18 @@ HOC.propTypes = {
   children: PropTypes.element.isRequired,
 };
 
+const fetchClient = createFetch(fetch, {
+  baseUrl: window.App.apiUrl,
+});
+
 // Global (context) variables that can be easily accessed from any React component
 // https://facebook.github.io/react/docs/context.html
 const context = {
   // Universal HTTP client
-  fetch: createFetch(fetch, {
-    baseUrl: window.App.apiUrl,
-  }),
+  fetch: fetchClient,
   // Initialize a new Redux store
   // http://redux.js.org/docs/basics/UsageWithReact.html
-  store: configureStore(window.App.state, { history }),
+  store: configureStore(window.App.state, { fetch: fetchClient, history }),
   storeSubscription: null,
 };
 
