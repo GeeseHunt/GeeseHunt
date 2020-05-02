@@ -1,31 +1,80 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import {
   ListItemText,
   Typography,
   Paper,
   ListSubheader,
 } from '@material-ui/core';
-import { getSubjects as getSubjectsAction } from '../../actions/subjects';
-import { selectSubjects } from '../../selectors/subjects';
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
 import InfiniteScrollList from '../InfiniteScrollList';
+
+const FETCH_SUBJECTS = gql`
+  query FetchSubjects($first: Int, $after: String) {
+    subjects(first: $first, after: $after) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        node {
+          ... on Subject {
+            subject
+            description
+            unit
+            group
+          }
+        }
+      }
+    }
+  }
+`;
 
 const pageSize = 15;
 
-const ExploreLayout = ({ subjects, getSubjects }) => {
-  React.useEffect(() => {
-    getSubjects({ first: pageSize });
-  }, [getSubjects, pageSize]);
+const initialData = {
+  subjects: {
+    edges: [],
+    pageInfo: {},
+  },
+};
+
+const ExploreLayout = () => {
+  const { loading, data = initialData, fetchMore } = useQuery(FETCH_SUBJECTS, {
+    variables: { first: pageSize },
+    notifyOnNetworkStatusChange: true,
+  });
+  const { edges, pageInfo } = data.subjects;
 
   const handleLoadData = () => {
-    if (subjects.hasNextPage)
-      getSubjects({ first: pageSize, after: subjects.endCursor });
+    if (pageInfo.hasNextPage) {
+      fetchMore({
+        variables: {
+          after: pageInfo.endCursor,
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          const newEdges = fetchMoreResult.subjects.edges;
+
+          return newEdges.length
+            ? {
+                // Put the new comments at the end of the list and update `pageInfo`
+                // so we have the new `endCursor` and `hasNextPage` values
+                subjects: {
+                  // eslint-disable-next-line no-underscore-dangle
+                  __typename: previousResult.subjects.__typename,
+                  edges: [...previousResult.subjects.edges, ...newEdges],
+                  pageInfo: fetchMoreResult.subjects.pageInfo,
+                },
+              }
+            : previousResult;
+        },
+      });
+    }
   };
 
-  const subjectsToRender = subjects.subjects.map(subject => ({
-    ...subject,
-    key: subject.subject,
+  const subjectsToRender = edges.map(edge => ({
+    ...edge.node,
+    key: edge.node.subject,
   }));
 
   // eslint-disable-next-line react/prop-types
@@ -45,28 +94,10 @@ const ExploreLayout = ({ subjects, getSubjects }) => {
         items={subjectsToRender}
         renderItem={renderSubject}
         onLoadData={handleLoadData}
-        loading={subjects.loading}
+        loading={loading}
       />
     </Paper>
   );
 };
 
-ExploreLayout.propTypes = {
-  subjects: PropTypes.shape({
-    loading: PropTypes.bool.isRequired,
-    subjects: PropTypes.array.isRequired,
-    endCursor: PropTypes.string,
-    hasNextPage: PropTypes.bool.isRequired,
-  }).isRequired,
-  getSubjects: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = state => ({
-  subjects: selectSubjects(state),
-});
-
-const mapDispatchToProps = {
-  getSubjects: getSubjectsAction,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ExploreLayout);
+export default ExploreLayout;

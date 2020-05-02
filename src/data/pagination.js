@@ -91,7 +91,7 @@ export const paginate = options => {
       // not sure if there's a better way to do it
       const hasNextPage =
         endCursor &&
-        (await query(decodeCursor(endCursor, 1)).then(res => res.length > 0));
+        (await query(decodeCursor(endCursor), 1).then(res => res.length > 0));
 
       return {
         totalCount,
