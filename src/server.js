@@ -8,6 +8,7 @@
  */
 
 import path from 'path';
+import Promise from 'bluebird';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
@@ -18,8 +19,10 @@ import jwt from 'jsonwebtoken';
 import nodeFetch from 'node-fetch';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
+import { getDataFromTree } from '@apollo/react-ssr';
 import PrettyError from 'pretty-error';
 import { ServerStyleSheets } from '@material-ui/core';
+import createApolloClient from './core/createApolloClient';
 import App from './components/App';
 import Html from './components/Html';
 import { ErrorPageWithoutStyle } from './routes/error/ErrorPage';
@@ -33,6 +36,7 @@ import configureStore from './store/configureStore';
 import { setRuntimeVariable } from './actions/runtime';
 import config from './config';
 import configureDatabase from './data/configureDatabase';
+import UWDataClient from './clients/uwDataClient';
 
 process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -50,6 +54,13 @@ global.navigator.userAgent = global.navigator.userAgent || 'all';
 configureDatabase(config.databaseUrl, {
   autoIndex: __DEV__,
 });
+
+const clients = {
+  uwDataClient: new UWDataClient({
+    baseUrl: config.api.uwApiUrl,
+    apiKey: config.apiKeys.uwApiKey,
+  }),
+};
 
 const app = express();
 
@@ -114,12 +125,15 @@ app.get(
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
+// Documentation of fields provided to the resolver:
+// https://graphql.org/learn/execution/#root-fields-resolvers
 app.use(
   '/graphql',
   expressGraphQL(req => ({
     schema,
     graphiql: __DEV__,
     rootValue: { request: req },
+    context: { clients },
     pretty: __DEV__,
   })),
 );
@@ -129,10 +143,16 @@ app.use(
 // -----------------------------------------------------------------------------
 app.get('*', async (req, res, next) => {
   try {
+    const apolloClient = createApolloClient({
+      schema,
+      rootValue: { request: req },
+    });
+
     // Universal HTTP client
     const fetch = createFetch(nodeFetch, {
       baseUrl: config.api.serverUrl,
       cookie: req.headers.cookie,
+      apolloClient,
       schema,
       graphql,
     });
@@ -142,8 +162,11 @@ app.get('*', async (req, res, next) => {
     };
 
     const store = configureStore(initialState, {
+      cookie: req.headers.cookie,
       fetch,
       // I should not use `history` on server.. but how I do redirection? follow universal-router
+      history: null,
+      apolloClient,
     });
 
     store.dispatch(
@@ -163,6 +186,8 @@ app.get('*', async (req, res, next) => {
       // You can access redux through react-redux connect
       store,
       storeSubscription: null,
+      // Apollo Client for use with react-apollo
+      apolloClient,
     };
 
     const route = await router.resolve(context);
@@ -178,8 +203,13 @@ app.get('*', async (req, res, next) => {
     // https://material-ui.com/guides/server-rendering/
     const sheets = new ServerStyleSheets();
 
-    data.children = ReactDOM.renderToString(
-      sheets.collect(<App context={context}>{route.component}</App>),
+    const rootComponent = <App context={context}>{route.component}</App>;
+
+    await getDataFromTree(rootComponent);
+    // this is here because of Apollo redux APOLLO_QUERY_STOP action
+    await Promise.delay(0);
+    data.children = await ReactDOM.renderToString(
+      sheets.collect(rootComponent),
     );
 
     const scripts = new Set();
@@ -198,6 +228,7 @@ app.get('*', async (req, res, next) => {
     data.app = {
       apiUrl: config.api.clientUrl,
       state: context.store.getState(),
+      apolloState: context.apolloClient.extract(),
     };
     data.styles = [{ id: 'jss-server-side', cssText: sheets.toString() }];
 

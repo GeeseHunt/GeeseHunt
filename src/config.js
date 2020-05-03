@@ -35,10 +35,12 @@ module.exports = {
       process.env.API_SERVER_URL ||
       `http://localhost:${process.env.PORT || 3000}`,
 
-    uwAPIUrl: process.env.UW_API_URL || 'https://api.uwaterloo.ca/v2',
+    uwApiUrl: process.env.UW_API_URL || 'https://api.uwaterloo.ca/v2/',
   },
 
-  uwAPIKey: process.env.UW_API_KEY,
+  apiKeys: {
+    uwApiKey: process.env.UW_API_KEY,
+  },
 
   // Database
   databaseUrl:

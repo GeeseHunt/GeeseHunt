@@ -12,13 +12,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import deepForceUpdate from 'react-deep-force-update';
 import queryString from 'query-string';
-import { createPath } from 'history';
+import { createPath } from 'history/PathUtils';
 import PropTypes from 'prop-types';
 import App from './components/App';
 import createFetch from './createFetch';
 import configureStore from './store/configureStore';
-import history from './history';
 import { updateMeta } from './DOMUtils';
+import history from './history';
+import createApolloClient from './core/createApolloClient';
 import router from './router';
 
 const HOC = ({ context, children }) => {
@@ -37,16 +38,22 @@ HOC.propTypes = {
   children: PropTypes.element.isRequired,
 };
 
+// Universal HTTP client
+const fetch = createFetch(window.fetch, {
+  baseUrl: window.App.apiUrl,
+});
+
+const apolloClient = createApolloClient();
+
 // Global (context) variables that can be easily accessed from any React component
 // https://facebook.github.io/react/docs/context.html
 const context = {
-  // Universal HTTP client
-  fetch: createFetch(fetch, {
-    baseUrl: window.App.apiUrl,
-  }),
+  fetch,
+  // For react-apollo
+  apolloClient,
   // Initialize a new Redux store
   // http://redux.js.org/docs/basics/UsageWithReact.html
-  store: configureStore(window.App.state, { history }),
+  store: configureStore(window.App.state, { fetch, history, apolloClient }),
   storeSubscription: null,
 };
 

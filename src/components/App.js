@@ -10,6 +10,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider as ReduxProvider } from 'react-redux';
+import { ApolloProvider } from '@apollo/react-hooks';
 import ApplicationContext from './ApplicationContext';
 
 /**
@@ -36,8 +37,7 @@ import ApplicationContext from './ApplicationContext';
  */
 
 export default function App({ context, children }) {
-  const { fetch, pathname, query, ...reduxContext } = context;
-
+  const { fetch, pathname, query, apolloClient, ...reduxContext } = context;
   // NOTE: If you need to add or modify header, footer etc. of the app,
   // please do that inside the Layout component.
   return (
@@ -45,7 +45,9 @@ export default function App({ context, children }) {
       <ApplicationContext.Provider
         value={{ context: { fetch, pathname, query } }}
       >
-        {React.Children.only(children)}
+        <ApolloProvider client={apolloClient}>
+          {React.Children.only(children)}
+        </ApolloProvider>
       </ApplicationContext.Provider>
     </ReduxProvider>
   );
@@ -59,6 +61,7 @@ App.propTypes = {
     fetch: PropTypes.func.isRequired,
     pathname: PropTypes.string.isRequired,
     query: PropTypes.object,
+    apolloClient: PropTypes.object.isRequired,
     // Integrate Redux
     // http://redux.js.org/docs/basics/UsageWithReact.html
     ...ReduxProvider.childContextTypes,
