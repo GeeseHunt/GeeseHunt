@@ -78,20 +78,21 @@ export const paginate = options => {
 
       const { first, after } = args;
       const cursor = after ? decodeCursor(after) : {};
-      const limit = first || false;
-      const result = await query(cursor, limit);
+      const limit = first || -1;
+      const result = await query(cursor, limit !== -1 ? limit + 1 : limit);
+      let hasNextPage = false;
+
+      if (limit !== -1 && result.length === limit + 1) {
+        hasNextPage = true;
+        result.pop();
+      }
+
       const totalCount = result.length;
       const edges = result.map(item => ({
         node: { ...item, graphqlType: type },
         cursor: encodeCursor(getCursor(item, rootValue, args, context, info)),
       }));
       const endCursor = edges.length ? edges[edges.length - 1].cursor : null;
-
-      // checks if it's possible to get next item
-      // not sure if there's a better way to do it
-      const hasNextPage =
-        endCursor &&
-        (await query(decodeCursor(endCursor), 1).then(res => res.length > 0));
 
       return {
         totalCount,

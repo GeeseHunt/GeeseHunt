@@ -13,7 +13,7 @@ const subjects = paginate({
     const { cursor, limit } = args;
     let query = Subject.find(cursor).sort({ popularity: -1, _id: 1 });
 
-    if (limit) query = query.limit(limit);
+    if (limit !== -1) query = query.limit(limit);
 
     return query.exec().then(items => items.map(item => item.toObject()));
   },

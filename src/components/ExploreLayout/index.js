@@ -57,7 +57,7 @@ const ExploreLayout = () => {
 
           return newEdges.length
             ? {
-                // Put the new comments at the end of the list and update `pageInfo`
+                // Put the new subjects at the end of the list and update `pageInfo`
                 // so we have the new `endCursor` and `hasNextPage` values
                 subjects: {
                   // eslint-disable-next-line no-underscore-dangle
