@@ -2,10 +2,10 @@ import gql from 'graphql-tag';
 
 export const typeDefs = gql`
   type Course {
-    courseId: String
-    subject: String
-    catalogNumber: String
-    title: String
+    courseId: String!
+    subject: String!
+    catalogNumber: String!
+    title: String!
     units: Float
     description: String
     academic_level: String

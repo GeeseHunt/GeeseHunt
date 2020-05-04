@@ -10,19 +10,19 @@ export const typeDefs = gql`
   union PageEdgeNode = Subject
 
   type PageEdge {
-    node: PageEdgeNode
+    node: PageEdgeNode!
     cursor: String
   }
 
   type PageInfo {
-    endCursor: String
-    hasNextPage: Boolean
+    endCursor: String!
+    hasNextPage: Boolean!
   }
 
   type Page {
     totalCount: Int
-    edges: [PageEdge]
-    pageInfo: PageInfo
+    edges: [PageEdge]!
+    pageInfo: PageInfo!
   }
 `;
 

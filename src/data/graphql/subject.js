@@ -4,7 +4,7 @@ import { paginate } from './pagination';
 
 export const typeDefs = gql`
   type Subject {
-    subject: String
+    subject: String!
     description: String
     unit: String
     group: String
