@@ -37,6 +37,7 @@ import { setRuntimeVariable } from './actions/runtime';
 import config from './config';
 import configureDatabase from './data/configureDatabase';
 import UWDataClient from './clients/uwDataClient';
+import CourseService from './services/CourseService';
 
 process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -60,6 +61,10 @@ const clients = {
     baseUrl: config.api.uwApiUrl,
     apiKey: config.apiKeys.uwApiKey,
   }),
+};
+
+const services = {
+  courseService: new CourseService({ clients }),
 };
 
 const app = express();
@@ -133,7 +138,7 @@ app.use(
     schema,
     graphiql: __DEV__,
     rootValue: { request: req },
-    context: { clients },
+    context: { clients, services },
     pretty: __DEV__,
   })),
 );
@@ -146,6 +151,7 @@ app.get('*', async (req, res, next) => {
     const apolloClient = createApolloClient({
       schema,
       rootValue: { request: req },
+      context: { clients, services },
     });
 
     // Universal HTTP client

@@ -44,7 +44,7 @@ export function AppLayout({ children, user }) {
   const isLoggedIn = Boolean(user.id);
 
   const sideBarMenuItems = [
-    { text: 'Explorer Course', icon: <ExploreIcon />, link: '/courses' },
+    { text: 'Explorer Course', icon: <ExploreIcon />, link: '/explore' },
     { text: 'My GPA', icon: <SpellcheckIcon />, link: '/' },
   ];
 
@@ -132,7 +132,7 @@ export function AppLayout({ children, user }) {
       {sideBar}
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {children}
+        <div className={classes.children}>{children}</div>
       </main>
     </div>
   );

@@ -1,102 +1,31 @@
 import React from 'react';
-import {
-  ListItemText,
-  Typography,
-  Paper,
-  ListSubheader,
-} from '@material-ui/core';
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
-import InfiniteScrollList from '../InfiniteScrollList';
-
-const FETCH_SUBJECTS = gql`
-  query FetchSubjects($first: Int, $after: String) {
-    subjects(first: $first, after: $after) {
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-      edges {
-        node {
-          ... on Subject {
-            subject
-            description
-            unit
-            group
-          }
-        }
-      }
-    }
-  }
-`;
-
-const pageSize = 15;
-
-const initialData = {
-  subjects: {
-    edges: [],
-    pageInfo: {},
-  },
-};
+import { Container, Divider, Paper } from '@material-ui/core';
+import _ from 'lodash';
+import useStyles from './styles';
+import SearchField from './SearchField';
+import SearchResult from './SearchResult';
+import SubjectsBar from './SubjectsBar';
 
 const ExploreLayout = () => {
-  const { loading, data = initialData, fetchMore } = useQuery(FETCH_SUBJECTS, {
-    variables: { first: pageSize },
-    notifyOnNetworkStatusChange: true,
-  });
-  const { edges, pageInfo } = data.subjects;
+  const classes = useStyles();
+  const [keyword, setKeyword] = React.useState('');
 
-  const handleLoadData = () => {
-    if (pageInfo.hasNextPage) {
-      fetchMore({
-        variables: {
-          after: pageInfo.endCursor,
-        },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          const newEdges = fetchMoreResult.subjects.edges;
-
-          return newEdges.length
-            ? {
-                // Put the new subjects at the end of the list and update `pageInfo`
-                // so we have the new `endCursor` and `hasNextPage` values
-                subjects: {
-                  // eslint-disable-next-line no-underscore-dangle
-                  __typename: previousResult.subjects.__typename,
-                  edges: [...previousResult.subjects.edges, ...newEdges],
-                  pageInfo: fetchMoreResult.subjects.pageInfo,
-                },
-              }
-            : previousResult;
-        },
-      });
-    }
-  };
-
-  const subjectsToRender = edges.map(edge => ({
-    ...edge.node,
-    key: edge.node.subject,
-  }));
-
-  // eslint-disable-next-line react/prop-types
-  const renderSubject = ({ subject, description }) => (
-    <ListItemText>
-      <Typography variant="subtitle2">
-        {subject} - {description}
-      </Typography>
-    </ListItemText>
-  );
+  const handleSearchChange = val => setKeyword(val);
 
   return (
-    <Paper>
-      <InfiniteScrollList
-        dense
-        subheader={<ListSubheader>Subjects</ListSubheader>}
-        items={subjectsToRender}
-        renderItem={renderSubject}
-        onLoadData={handleLoadData}
-        loading={loading}
-      />
-    </Paper>
+    <Container maxWidth="xl" className={classes.layoutContainer}>
+      <Paper className={classes.searchBoxContainer}>
+        <SubjectsBar />
+        <Divider />
+        <SearchField
+          className={classes.searchField}
+          onChange={_.debounce(handleSearchChange, 300)}
+        />
+      </Paper>
+      <Paper className={classes.resultContainer}>
+        <SearchResult keyword={keyword} className={classes.searchResult} />
+      </Paper>
+    </Container>
   );
 };
 

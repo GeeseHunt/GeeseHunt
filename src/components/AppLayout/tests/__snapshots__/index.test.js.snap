@@ -20,7 +20,7 @@ exports[`AppLayout #render renders without errors 1`] = `
         <MenuIcon />
       </WithStyles(ForwardRef(IconButton))>
       <WithStyles(ForwardRef(Typography))
-        className="makeStyles-appTitle-11"
+        className="makeStyles-appTitle-12"
         noWrap={true}
         variant="h6"
       >
@@ -31,7 +31,7 @@ exports[`AppLayout #render renders without errors 1`] = `
       >
         <WithStyles(ForwardRef(Avatar))
           alt="name"
-          className="makeStyles-avatar-13"
+          className="makeStyles-avatar-14"
           src=""
         />
       </WithStyles(ForwardRef(IconButton))>
@@ -62,10 +62,10 @@ exports[`AppLayout #render renders without errors 1`] = `
     <WithStyles(ForwardRef(Divider)) />
     <WithStyles(ForwardRef(List))>
       <Link
-        className="makeStyles-listItemLink-12"
+        className="makeStyles-listItemLink-13"
         key="Explorer Course"
         onClick={null}
-        to="/courses"
+        to="/explore"
       >
         <WithStyles(ForwardRef(ListItem))
           button={true}
@@ -79,7 +79,7 @@ exports[`AppLayout #render renders without errors 1`] = `
         </WithStyles(ForwardRef(ListItem))>
       </Link>
       <Link
-        className="makeStyles-listItemLink-12"
+        className="makeStyles-listItemLink-13"
         key="My GPA"
         onClick={null}
         to="/"
@@ -103,8 +103,12 @@ exports[`AppLayout #render renders without errors 1`] = `
     <div
       className="makeStyles-toolbar-9"
     />
-    <div>
-      Hello world!
+    <div
+      className="makeStyles-children-11"
+    >
+      <div>
+        Hello world!
+      </div>
     </div>
   </main>
 </div>
