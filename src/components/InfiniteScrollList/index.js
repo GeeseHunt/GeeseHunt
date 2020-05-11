@@ -10,6 +10,7 @@ function InfiniteScrollList({
   loading,
   renderItem,
   onLoadData,
+  className,
 }) {
   const classes = useStyles();
   const listRef = React.useRef();
@@ -34,28 +35,30 @@ function InfiniteScrollList({
   }, [listRef, lastItemRef]);
 
   return (
-    <List dense={dense} subheader={subheader}>
-      <div className={classes.subjectsListContent} ref={listRef}>
-        {items.map((item, i) => {
-          return (
-            <ListItem
-              key={item.key}
-              button
-              ref={i === items.length - 1 ? lastItemRef : null}
-            >
-              {renderItem(item)}
+    <div className={className}>
+      <List dense={dense} subheader={subheader} className={classes.list}>
+        <div className={classes.listContent} ref={listRef}>
+          {items.map((item, i) => {
+            return (
+              <ListItem
+                key={item.key}
+                button
+                ref={i === items.length - 1 ? lastItemRef : null}
+              >
+                {renderItem(item)}
+              </ListItem>
+            );
+          })}
+          {loading && (
+            <ListItem>
+              <Box display="flex" width="100%" justifyContent="center">
+                <Typography variant="caption">Loading...</Typography>
+              </Box>
             </ListItem>
-          );
-        })}
-        {loading && (
-          <ListItem>
-            <Box display="flex" width="100%" justifyContent="center">
-              <Typography variant="caption">Loading...</Typography>
-            </Box>
-          </ListItem>
-        )}
-      </div>
-    </List>
+          )}
+        </div>
+      </List>
+    </div>
   );
 }
 
@@ -65,6 +68,7 @@ InfiniteScrollList.propTypes = {
   // MUI List propTypes
   subheader: PropTypes.node,
   dense: PropTypes.bool,
+  className: PropTypes.string,
 
   renderItem: PropTypes.func.isRequired,
   onLoadData: PropTypes.func,
@@ -74,6 +78,7 @@ InfiniteScrollList.defaultProps = {
   loading: false,
   subheader: null,
   dense: false,
+  className: '',
 
   onLoadData: () => {},
 };

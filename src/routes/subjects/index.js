@@ -1,14 +1,14 @@
 import React from 'react';
 import AppLayout from '../../components/AppLayout';
-import ExploreLayout from '../../components/ExploreLayout';
+import SubjectsLayout from '../../components/SubjectsLayout';
 
 async function action() {
   return {
-    title: 'GeeseHunt - Courses',
-    chunks: ['courses'],
+    title: 'GeeseHunt - Subjects',
+    chunks: ['subjects'],
     component: (
       <AppLayout>
-        <ExploreLayout />
+        <SubjectsLayout />
       </AppLayout>
     ),
   };

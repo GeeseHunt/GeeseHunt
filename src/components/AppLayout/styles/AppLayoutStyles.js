@@ -58,8 +58,16 @@ export default makeStyles(theme => ({
     ...theme.mixins.toolbar,
   },
   content: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100vh',
     flexGrow: 1,
+  },
+  children: {
     padding: theme.spacing(3),
+    boxSizing: 'border-box',
+    flex: 1,
+    overflowX: 'scroll',
   },
   appTitle: {
     flexGrow: 1,

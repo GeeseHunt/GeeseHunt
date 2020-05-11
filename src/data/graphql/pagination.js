@@ -7,7 +7,7 @@
 import gql from 'graphql-tag';
 
 export const typeDefs = gql`
-  union PageEdgeNode = Subject
+  union PageEdgeNode = Subject | Course
 
   type PageEdge {
     node: PageEdgeNode!
@@ -15,8 +15,8 @@ export const typeDefs = gql`
   }
 
   type PageInfo {
-    endCursor: String!
-    hasNextPage: Boolean!
+    endCursor: String
+    hasNextPage: Boolean
   }
 
   type Page {
